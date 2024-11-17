@@ -9,6 +9,8 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible     = false
   vpc_security_group_ids  = [module.vpc.default_security_group_id]
   db_subnet_group_name    = module.vpc.database_subnet_group_name
+
+  skip_final_snapshot     = true
 }
 
 resource "random_password" "postgres_password" {
