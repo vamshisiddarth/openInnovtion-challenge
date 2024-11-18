@@ -78,3 +78,14 @@ resource "helm_release" "nginx" {
     kubernetes_namespace.application
   ]
 }
+
+resource "kubernetes_secret" "postgres_credentials" {
+  metadata {
+    name = "db-secret"
+  }
+
+  data = {
+    password = random_password.postgres_password.result
+    host_name = aws_db_instance.postgres.address
+  }
+}
