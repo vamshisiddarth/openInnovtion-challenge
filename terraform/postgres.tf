@@ -17,3 +17,29 @@ resource "random_password" "postgres_password" {
   length = 10
   special = false
 }
+
+resource "aws_security_group" "eks_to_postgres" {
+  name        = "eks-postgres-access"
+  description = "Allow EKS nodes to access PostgreSQL DB"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [
+      module.vpc.private_subnets_cidr_blocks,
+      module.vpc.public_subnets_cidr_blocks
+    ]
+  }
+
+  egress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "-1"
+    cidr_blocks = [
+      module.vpc.private_subnets_cidr_blocks,
+      module.vpc.public_subnets_cidr_blocks
+    ]
+  }
+}
