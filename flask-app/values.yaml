@@ -1,0 +1,33 @@
+replicaCount: 3
+image:
+  repository: ecr-repo/flask-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 250m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+securityContext:
+  enabled: true
+  runAsUser: 1000
+  runAsGroup: 3000
+
+serviceMonitor:
+  enabled: true
+  namespace: default
+  labels: {}
